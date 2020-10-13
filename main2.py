@@ -41,7 +41,7 @@ class CloudMusic:
         """获取每日推荐"""
         res=self.get('/recommend/songs')
         data=res.json()
-        recommend=data.get('recommend')
+        recommend=data.get('data').get('dailySongs')
         ids=[]
         for item in recommend:
             ids.append(str(item.get('id')))
@@ -91,23 +91,23 @@ class CloudMusic:
 
 
 
-if __name__=='__main__':
-    api=config.api
-    phone=config.phone
-    password=config.password
+if __name__ == '__main__':
+    api = config.api
+    phone = config.phone
+    password = config.password
     print('开始登录')
-    cm=CloudMusic(api,phone,password)
-    uid=cm.login()
+    cm = CloudMusic(api, phone, password)
+    uid = cm.login()
     if not uid:
         print('登录失败')
         exit(0)
-    print('【uid=%s】'%uid)
+    print('【uid=%s】' % uid)
     try:
         print('开始签到')
         cm.qiandao()
         print('开始处理日推歌单')
-        if int(time.strftime('%H'))<8:
-            #网易云6点更新推荐 8点后处理避免将昨天的歌单放到今天的歌单里
+        if int(time.strftime('%H')) < 8:
+            # 网易云6点更新推荐 8点后处理避免将昨天的歌单放到今天的歌单里
             print('不到8点，不处理')
             exit(0)
         list_name = time.strftime('%Y-%m-%d') + '日推'
